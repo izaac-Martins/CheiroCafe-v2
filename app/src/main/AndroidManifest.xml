@@ -16,11 +16,21 @@
         android:theme="@style/Theme.CheiroCafe">
 
         <activity
+            android:name=".ListaProdutosFiltradosActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".CadastroProdutoActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".DetalheActivity"
             android:exported="false" />
+
         <activity
             android:name=".MainActivityPedido"
             android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

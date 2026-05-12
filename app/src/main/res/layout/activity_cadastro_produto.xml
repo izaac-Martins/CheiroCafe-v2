@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cadastrar Novo Produto"
+            android:textColor="#432A20"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp"/>
+
+        <EditText
+            android:id="@+id/editNome"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:hint="Nome (Ex: Suco de Morango)"
+            android:inputType="textCapWords"
+            android:background="@android:drawable/edit_text"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp"/>
+
+        <Spinner
+            android:id="@+id/spinnerCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@android:drawable/btn_dropdown"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp" />
+
+        <Spinner
+            android:id="@+id/spinnerSubcategoria"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@android:drawable/btn_dropdown"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/editPreco"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:hint="Preço Base (Ex: 10.00)"
+            android:inputType="numberDecimal"
+            android:background="@android:drawable/edit_text"
+            android:padding="10dp"
+            android:layout_marginBottom="24dp"/>
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tamanhos Disponíveis"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText android:id="@+id/editNomeVariante" android:layout_width="0dp" android:layout_height="50dp" android:layout_weight="2" android:hint="Ex: 300ml" android:background="@android:drawable/edit_text" android:padding="10dp"/>
+            <EditText android:id="@+id/editPrecoVariante" android:layout_width="0dp" android:layout_height="50dp" android:layout_weight="1" android:hint="Preço" android:inputType="numberDecimal" android:background="@android:drawable/edit_text" android:padding="10dp" android:layout_marginStart="8dp"/>
+            <Button android:id="@+id/btnAddVariante" android:layout_width="50dp" android:layout_height="50dp" android:text="+" android:backgroundTint="#432A20" android:layout_marginStart="8dp"/>
+        </LinearLayout>
+        <TextView android:id="@+id/txtListaVariantes" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Nenhum tamanho adicionado" android:textColor="#757575" android:layout_marginTop="4dp" android:layout_marginBottom="20dp"/>
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Opcionais / Adicionais"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupVinculoOpcional"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+            <RadioButton
+                android:id="@+id/rbVinculoProduto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="12sp"
+                android:text="Apenas deste produto"
+                android:checked="true"/>
+            <RadioButton
+                android:id="@+id/rbVinculoCategoria"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="12sp"
+                android:text="Geral da Categoria"/>
+        </RadioGroup>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText android:id="@+id/editNomeOpcional" android:layout_width="0dp" android:layout_height="50dp" android:layout_weight="2" android:hint="Ex: Mel" android:background="@android:drawable/edit_text" android:padding="10dp"/>
+            <EditText android:id="@+id/editPrecoOpcional" android:layout_width="0dp" android:layout_height="50dp" android:layout_weight="1" android:hint="Preço" android:inputType="numberDecimal" android:background="@android:drawable/edit_text" android:padding="10dp" android:layout_marginStart="8dp"/>
+            <Button android:id="@+id/btnAddOpcional" android:layout_width="50dp" android:layout_height="50dp" android:text="+" android:backgroundTint="#432A20" android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <TextView android:id="@+id/txtListaOpcionais" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Nenhum opcional adicionado" android:textColor="#757575" android:layout_marginTop="4dp" android:layout_marginBottom="24dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSalvarProduto"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="SALVAR NO BANCO"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#432A20"
+            app:cornerRadius="20dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</ScrollView>

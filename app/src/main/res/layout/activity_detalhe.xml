@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:padding="20dp">
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/txtTitulo"
@@ -46,31 +47,11 @@
             android:textStyle="bold" />
 
         <LinearLayout
+            android:id="@+id/containerTamanhos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_weight="1"
-                android:text="200ml (R$ 6,00)"
-                android:textColor="#FFFFFF"
-                app:backgroundTint="#432A20"
-                app:cornerRadius="20dp" />
-
-            <Space android:layout_width="16dp" android:layout_height="wrap_content" />
-
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_weight="1"
-                android:text="250ml (R$ 8,00)"
-                android:textColor="#FFFFFF"
-                app:backgroundTint="#432A20"
-                app:cornerRadius="20dp" />
-        </LinearLayout>
+            android:layout_marginTop="8dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -117,18 +98,28 @@
             android:layout_marginTop="8dp">
 
             <Button
-                android:layout_width="60dp"
-                android:layout_height="45dp"
-                android:backgroundTint="#432A20"
-                android:text="+"
-                android:textColor="#FFFFFF" />
-            <TextView android:layout_width="40dp" android:layout_height="wrap_content" android:text="1" android:gravity="center" android:textSize="20sp" />
-            <Button
+                android:id="@+id/btnMenos"
                 android:layout_width="60dp"
                 android:layout_height="45dp"
                 android:backgroundTint="#432A20"
                 android:text="-"
                 android:textColor="#F9F9F9" />
+
+            <TextView
+                android:id="@+id/txtQuantidade"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:gravity="center"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btnMais"
+                android:layout_width="60dp"
+                android:layout_height="45dp"
+                android:backgroundTint="#432A20"
+                android:text="+"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
