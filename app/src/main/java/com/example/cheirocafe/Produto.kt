@@ -2,26 +2,24 @@ package com.example.cheirocafe
 
 import java.io.Serializable
 
-// Representa uma variante (tamanho/tipo), contendo o nome e o preço específico dela
 data class Variante(
     val nome: String,
     val preco: Double
 ) : Serializable
 
-// Representa um adicional, contendo o nome e o preço dele
+// Atualizado: agora ele sabe se pertence ao produto ou à categoria global
 data class Adicional(
     val nome: String,
-    val preco: Double
+    val preco: Double,
+    val vinculo: String = "PRODUTO" // Valores: "PRODUTO", "CATEGORIA_BEBIDAS", "CATEGORIA_DOCES", "CATEGORIA_SALGADOS"
 ) : Serializable
 
-// A sua classe principal de Produto
 data class Produto(
-    val id: Long,
+    val id: Long? = null,
     val nome: String,
     val descricao: String,
-    val preco: Double, // Preço base (se houver)
+    val preco: Double,
     val categoria: String,
-    // Agora o produto recebe a lista completa de objetos, não apenas textos soltos
     val variantes: List<Variante>,
     val adicionais: List<Adicional>
-): Serializable
+) : Serializable
