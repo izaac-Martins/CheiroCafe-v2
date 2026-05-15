@@ -81,7 +81,7 @@ class CadastroProdutoActivity : AppCompatActivity() {
             if (n.isNotEmpty() && p != null) {
                 val categoriaAtual = spinnerCategoria.selectedItem.toString()
 
-                // Se a opção marcada for produto, mandamos "PRODUTO", senwão criamos a flag da categoria correspondente
+                // Se a opção marcada for produto, mandamos "PRODUTO", senão criamos a flag da categoria correspondente
                 val tipoVinculo = if (rbVinculoProduto.isChecked) {
                     "PRODUTO"
                 } else {
