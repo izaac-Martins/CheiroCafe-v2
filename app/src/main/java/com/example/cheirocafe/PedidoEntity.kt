@@ -12,5 +12,6 @@ data class PedidoEntity(
     val tipoGraoEscolhido: String?,
     val adicionaisEscolhidos: String, // Salvaremos como texto (Ex: "Nutella, Chantilly")
     val quantidade: Int,
-    val precoTotalItem: Double
+    val precoTotalItem: Double,
+    val pagadorItem: String = "Mesa Total"
 )
