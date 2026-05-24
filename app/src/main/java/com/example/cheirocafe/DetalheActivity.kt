@@ -17,6 +17,7 @@ class DetalheActivity : AppCompatActivity() {
     private lateinit var database: AppDatabase
     // Guarda o produto que está ativo na tela no momento
     private var produtoAtual: Produto? = null
+    private var mesaAtual: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,7 +117,7 @@ class DetalheActivity : AppCompatActivity() {
 
                         if (clickedIndex == 0) {
                             // Cenário 1: Não dividir -> Passamos "Mesa Total" como pagador padrão
-                            salvarPedidoNoBanco(produto, pagador = "Mesa Total")
+                            salvarPedidoNoBanco(produto, pagador = "Mesa Total", mesa = mesaAtual)
                         } else {
                             // Cenário 2: Dividir -> Chama a função para escolher qual cliente vai pagar
                             perguntarNumeroMesa(produto)
@@ -154,7 +155,7 @@ class DetalheActivity : AppCompatActivity() {
     }/////Fim do Oncreate////////
 
     ////Começo da função salvarPedidoNoBanco////
-    private fun salvarPedidoNoBanco(produto: Produto, pagador: String) {
+    private fun salvarPedidoNoBanco(produto: Produto, pagador: String, mesa: Int) {
         val nomeDoCafe = produto.nome
         val containerTamanhos = findViewById<LinearLayout>(R.id.containerTamanhos)
         val containerAdicionais = findViewById<LinearLayout>(R.id.containerAdicionais)
@@ -205,7 +206,8 @@ class DetalheActivity : AppCompatActivity() {
             adicionaisEscolhidos = adicionaisTexto,
             quantidade = quantidade,
             precoTotalItem = precoTotal,
-            pagadorItem = pagador
+            pagadorItem = pagador,
+            numeroMesa = mesa
         )
 
         // 5. SALVAR NO ROOM EM SEGUNDO PLANO
@@ -427,7 +429,7 @@ class DetalheActivity : AppCompatActivity() {
             val pagadorFinal = if (nomeCliente.isNotEmpty()) nomeCliente else "Mesa Única"
 
             // Salva no Room salvando o nome do cliente
-            salvarPedidoNoBanco(produto, pagador = "$pagadorFinal (Mesa $numeroMesa)")
+            salvarPedidoNoBanco(produto, pagador = "$pagadorFinal (Mesa $mesaAtual)", mesa = mesaAtual)
 
             bottomSheetDialog.dismiss()
         }
