@@ -118,7 +118,7 @@
         android:id="@+id/painelCarrinhoIFood"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#E91E63"
+        android:background="#432A20"
         android:padding="16dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -13,12 +13,20 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
+import com.example.cheirocafe.AppDatabase
+import com.example.cheirocafe.PedidoDao
+import android.view.View
 
 class MainActivityPedido : AppCompatActivity() {
 
     private var listaProdutosCompleta: List<Produto> = emptyList()
     private lateinit var recyclerView: RecyclerView
     private lateinit var textViewLabel: TextView
+    private lateinit var database: AppDatabase
+    private lateinit var pedidoDao: PedidoDao
+    private lateinit var layoutPainelIfood: View
+    private lateinit var txtQuantidadeItens: TextView
+    private lateinit var txtValorTotal: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +70,59 @@ class MainActivityPedido : AppCompatActivity() {
             val intent = Intent(this, CadastroProdutoActivity::class.java)
             startActivity(intent)
         }
+
+        // Inicializa o Room Database e o DAO
+        database = AppDatabase.getDatabase(this) // Ajuste para a sua classe de Banco
+        pedidoDao = database.pedidoDao() // Ajuste se seu método tiver outro nome
+
+        // Vincula os componentes do painel inferior
+        layoutPainelIfood = findViewById(R.id.painelCarrinhoIFood)
+        txtQuantidadeItens = findViewById(R.id.txtTotalItensPainel)
+        txtValorTotal = findViewById(R.id.txtPrecoTotalPainel)
+
+        //evento de click na sacola, no pop-up inferior
+        val btnVerSacola = findViewById<View>(R.id.btnVerSacola)
+
+        btnVerSacola.setOnClickListener {
+            val intent = Intent(this, CarrinhoActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Ativa o monitoramento em tempo real do banco
+        configurarObservadorCarrinho()
+    }//Fim do oncriate
+
+    //função de monitoramento
+    private fun configurarObservadorCarrinho() {
+        // Como estamos na MainActivity, precisamos passar um ID de mesa para a Query.
+        // Se você ainda não tem a mesa salva na MainActivity, vou colocar uma fixa (ex: 1)
+        // apenas para testar, mas depois você pode pegar a mesa dinâmica.
+        val mesaIdAtual = 1
+
+        // Iniciamos uma Coroutine no escopo de ciclo de vida da Activity
+        lifecycleScope.launch {
+            // Coletamos o Flow em tempo real do Banco de Dados
+            pedidoDao.obterResumoPainel().collect { resumo ->
+
+                // Se o resumo for nulo ou se não houver itens na mesa
+                if (resumo == null || resumo.totalItens == 0) {
+                    layoutPainelIfood.visibility = android.view.View.GONE
+                } else {
+                    // Tem itens! Mostra a barra rosa do iFood
+                    layoutPainelIfood.visibility = android.view.View.VISIBLE
+
+                    // Pega os dados direto do objeto ResumoPainel que sua Query calculou
+                    val totalItens = resumo.totalItens
+                    val valorTotal = resumo.totalPreco ?: 0.0
+
+                    // Atualiza os textos do layout
+                    txtQuantidadeItens.text = "$totalItens ${if (totalItens == 1) "item" else "itens"}"
+                    txtValorTotal.text = String.format("R$ %.2f", valorTotal)
+                }
+            }
+        }
     }
+
 
     private fun buscarDadosDoServidor() {
         lifecycleScope.launch {

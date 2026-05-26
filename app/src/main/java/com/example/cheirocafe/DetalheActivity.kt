@@ -207,7 +207,8 @@ class DetalheActivity : AppCompatActivity() {
             quantidade = quantidade,
             precoTotalItem = precoTotal,
             pagadorItem = pagador,
-            numeroMesa = mesa
+            numeroMesa = mesa,
+            statusPedido = "RASCUNHO"
         )
 
         // 5. SALVAR NO ROOM EM SEGUNDO PLANO

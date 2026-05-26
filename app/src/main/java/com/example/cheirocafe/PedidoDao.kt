@@ -21,7 +21,7 @@ interface PedidoDao {
     @Query("SELECT * FROM itens_pedido WHERE numeroMesa = :mesaId AND statusPedido = 'RASCUNHO'")
     fun obterCarrinhoDaMesa(mesaId: Int): kotlinx.coroutines.flow.Flow<List<PedidoEntity>>
 
-    // A QUERY CHAVE: Soma o valor total e conta os itens da mesa para o painel iFood
-    @Query("SELECT SUM(precoTotalItem) as totalPreco, COUNT(*) as totalItens FROM itens_pedido WHERE numeroMesa = :mesaId AND statusPedido = 'RASCUNHO'")
-    fun obterResumoPainel(mesaId: Int): kotlinx.coroutines.flow.Flow<ResumoPainel?>
+    // A QUERY CHAVE: Soma o valor total e conta os itens de todas as mesas em rascunho para o painel iFood
+    @Query(value = "SELECT SUM(precoTotalItem) as totalPreco, COUNT(*) as totalItens FROM itens_pedido WHERE statusPedido = 'RASCUNHO'")
+    fun obterResumoPainel(): kotlinx.coroutines.flow.Flow<ResumoPainel?>
 }

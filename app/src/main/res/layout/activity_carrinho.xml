@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FAFAFA"
-    tools:context=".carrinhoActivity">
+    tools:context=".CarrinhoActivity">
 
-    <!-- Cabeçalho: Título e Identificação da Mesa -->
+    <!-- Título e Identificação da Mesa -->
     <TextView
         android:id="@+id/txtTituloCarrinho"
         android:layout_width="wrap_content"
