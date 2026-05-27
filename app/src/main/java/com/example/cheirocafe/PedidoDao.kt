@@ -24,4 +24,6 @@ interface PedidoDao {
     // A QUERY CHAVE: Soma o valor total e conta os itens de todas as mesas em rascunho para o painel iFood
     @Query(value = "SELECT SUM(precoTotalItem) as totalPreco, COUNT(*) as totalItens FROM itens_pedido WHERE statusPedido = 'RASCUNHO'")
     fun obterResumoPainel(): kotlinx.coroutines.flow.Flow<ResumoPainel?>
+    @Query(value = "UPDATE itens_pedido SET statusPedido = 'ENVIADO' WHERE statusPedido = 'RASCUNHO'")
+    suspend fun atualizarStatusParaEnviado()
 }
