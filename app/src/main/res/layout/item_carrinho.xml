@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtNomeProduto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nome do Produto"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#3E2723" />
+
+        <TextView
+            android:id="@+id/txtPrecoTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R$ 0,00"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#3E2723" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtQuantidade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Qtd: 1"
+        android:textSize="14sp"
+        android:textColor="#757575"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/txtAdicionais"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adicionais: Nenhum"
+        android:textSize="14sp"
+        android:textColor="#795548"
+        android:layout_marginTop="2dp"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"
+        android:layout_marginTop="8dp" />
+</LinearLayout>

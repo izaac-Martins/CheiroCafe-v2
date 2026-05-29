@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cheirocafe.PedidoEntity
+import com.example.cheirocafe.R
 
 class CarrinhoAdapter(
     private val listaItens: List<PedidoEntity>
@@ -14,13 +15,13 @@ class CarrinhoAdapter(
     class CarrinhoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtNomeProduto: TextView = itemView.findViewById(R.id.txtNomeProduto)
         val txtQuantidade: TextView = itemView.findViewById(R.id.txtQuantidade)
-        val txtPrecoTotal: TextView = itemView.findViewById(R.id.txtPrecoTotal)
+        val txtPrecoTotal: TextView = itemView.findViewById(R.id.txtTotalCarrinho)
         val txtAdicionais: TextView = itemView.findViewById(R.id.txtAdicionais)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarrinhoViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_carrinho, parent, false) // Certifique-se de ter o item_carrinho.xml criado
+            .inflate(R.layout.activity_carrinho, parent, false) // Certifique-se de ter o item_carrinho.xml criado
         return CarrinhoViewHolder(view)
     }
 

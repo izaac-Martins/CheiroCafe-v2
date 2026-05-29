@@ -16,7 +16,6 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView.LayoutManager // Força o import caso suma
 
 class CarrinhoActivity : AppCompatActivity() {
-
     private lateinit var database: AppDatabase
     private lateinit var pedidoDao: PedidoDao
     private lateinit var recyclerView: RecyclerView
@@ -29,7 +28,7 @@ class CarrinhoActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_carrinho)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.containerHeaderCarrinho).parent as android.view.View) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById<android.view.View>(R.id.containerHeaderCarrinho).parent as android.view.View) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -45,29 +44,48 @@ class CarrinhoActivity : AppCompatActivity() {
         database = AppDatabase.getDatabase(this)
         pedidoDao = database.pedidoDao()
 
-        ouvirItensDoCarrinho()
+
+        // --- AJUSTE DEFINITIVO: Buscar a mesa direto do último rascunho salvo no banco ---
+        lifecycleScope.launch {
+            // Buscamos todos os rascunhos ativos
+            pedidoDao.obterCarrinhoDaMesa(3).collect { todosOsItens ->
+                // Se houver algum item no banco, pegamos a mesa dele dinamicamente!
+                if (todosOsItens.isNotEmpty()) {
+                    val mesaDoBanco = todosOsItens.first().numeroMesa
+                    txtNumeroMesaCarrinho.text = "Mesa %02d".format(mesaDoBanco)
+
+                    // Passamos essa mesa para listar os produtos na tela
+                    ouvirItensDoCarrinho(mesaDoBanco.toString())
+                } else {
+                    // Se o banco estiver totalmente limpo, mostra sem mesa
+                    txtNumeroMesaCarrinho.text = "Carrinho Vazio"
+                    txtTotalCarrinho.text = "R$ 0,00"
+                    recyclerView.adapter = CarrinhoAdapter(emptyList())
+                }
+            }
+        }
 
         btnEnviarCozinha.setOnClickListener {
             enviarPedidoParaCozinha()
         }
-    }
+    }//fim do Oncreate
 
-    private fun ouvirItensDoCarrinho() {
+
+
+    // --- AJUSTE 2: A função agora recebe a mesa como String ---
+    private fun ouvirItensDoCarrinho(mesaIdAtual: String) {
         lifecycleScope.launch {
-            // Como sua query pede o ID da mesa, vamos colocar a Mesa 1 fixa por enquanto
-            val mesaIdAtual = 1
+            // Usando a sua função real do DAO passando o número correto como texto
+            pedidoDao.obterCarrinhoDaMesa(mesaIdAtual.toInt()).collect { listaPedidos ->
 
-            // Usando a sua função real do DAO: obterCarrinhoDaMesa
-            pedidoDao.obterCarrinhoDaMesa(mesaIdAtual).collect { listaPedidos ->
-
-                // Se o seu CarrinhoAdapter reclamar de receber PedidoEntity, mude o tipo na lista dele para List<PedidoEntity>
                 recyclerView.adapter = CarrinhoAdapter(listaPedidos)
 
                 var valorTotalGeral = 0.0
                 for (pedido in listaPedidos) {
-                    // Usando o campo real da sua tabela que aparece na linha 25 do seu DAO
                     valorTotalGeral += pedido.precoTotalItem
                 }
+
+                // Atualiza o valor total na tela bonitinho
                 txtTotalCarrinho.text = String.format("R$ %.2f", valorTotalGeral)
             }
         }
@@ -80,4 +98,4 @@ class CarrinhoActivity : AppCompatActivity() {
             finish()
         }
     }
-}
+}//fim da classe

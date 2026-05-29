@@ -116,10 +116,10 @@ class DetalheActivity : AppCompatActivity() {
                         dialog.dismiss() // Fecha o primeiro popup
 
                         if (clickedIndex == 0) {
-                            // Cenário 1: Não dividir -> Passamos "Mesa Total" como pagador padrão
-                            salvarPedidoNoBanco(produto, pagador = "Mesa Total", mesa = mesaAtual)
+                            //Se for conta única, chama a função para pedir a mesa primeiro!
+                            perguntarNumeroMesaContaUnica(produto)
                         } else {
-                            // Cenário 2: Dividir -> Chama a função para escolher qual cliente vai pagar
+                            // Se for dividir, chama a função que já existia
                             perguntarNumeroMesa(produto)
                         }
                     }
@@ -346,6 +346,41 @@ class DetalheActivity : AppCompatActivity() {
         btnAdicionar.text = "ADICIONAR AO PEDIDO (R$ ${"%.2f".format(total)})"
 
     }//Fim do atualizarPrecoBotao
+    // 1. NOVA FUNÇÃO: Captura a mesa para Conta Única e salva direto
+    private fun perguntarNumeroMesaContaUnica(produto: Produto) {
+        val inputMesa = android.widget.EditText(this)
+        inputMesa.hint = "Ex: 5, 12, 22..."
+        inputMesa.inputType = android.text.InputType.TYPE_CLASS_NUMBER
+
+        val container = android.widget.LinearLayout(this)
+        val params = android.widget.LinearLayout.LayoutParams(
+            android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        params.setMargins(48, 16, 48, 16)
+        inputMesa.layoutParams = params
+        container.addView(inputMesa)
+
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle("Número da Mesa (Conta Única)")
+            .setMessage("Digite o número da mesa para este pedido:")
+            .setView(container)
+            .setPositiveButton("Confirmar") { dialog, _ ->
+                val mesaDigitada = inputMesa.text.toString().trim()
+
+                // CORREÇÃO: Atualiza a variável global convertendo o texto para número inteiro
+                mesaAtual = mesaDigitada.toIntOrNull() ?: 0
+
+                dialog.dismiss()
+
+                // Salva no banco com a mesa preenchida e o pagador padrão
+                salvarPedidoNoBanco(produto, pagador = "Mesa Total", mesa = mesaAtual)
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }// Fim do perguntarNumeroMesaContaUnica
+
+    // 2. FUNÇÃO AJUSTADA: Agora ela também atualiza a mesaAtual antes de ir para o painel de clientes
     private fun perguntarNumeroMesa(produto: Produto) {
         val inputMesa = android.widget.EditText(this)
         inputMesa.hint = "Ex: 5, 12, 22..."
@@ -366,12 +401,15 @@ class DetalheActivity : AppCompatActivity() {
             .setView(container)
             .setPositiveButton("Confirmar") { dialog, _ ->
                 val mesaDigitada = inputMesa.text.toString().trim()
-                val mesaFinal = if (mesaDigitada.isNotEmpty()) mesaDigitada else "Avulso"
+
+                // CORREÇÃO: Atualiza a variável global aqui também!
+                mesaAtual = mesaDigitada.toIntOrNull() ?: 0
+                val mesaFinalTexto = if (mesaDigitada.isNotEmpty()) mesaDigitada else "Avulso"
 
                 dialog.dismiss()
 
-                // Agora que temos a mesa, abrimos o painel inferior (BottomSheet)
-                abrirPainelClientesMesa(produto, mesaFinal)
+                // Abre o painel inferior passando o texto formatado da mesa
+                abrirPainelClientesMesa(produto, mesaFinalTexto)
             }
             .setNegativeButton("Cancelar", null)
             .show()
@@ -429,7 +467,7 @@ class DetalheActivity : AppCompatActivity() {
             val nomeCliente = inputNomeCliente.text.toString().trim()
             val pagadorFinal = if (nomeCliente.isNotEmpty()) nomeCliente else "Mesa Única"
 
-            // Salva no Room salvando o nome do cliente
+            // CORREÇÃO: Repassando a variável global mesaAtual (que agora tem o valor real digitado!)
             salvarPedidoNoBanco(produto, pagador = "$pagadorFinal (Mesa $mesaAtual)", mesa = mesaAtual)
 
             bottomSheetDialog.dismiss()
