@@ -220,7 +220,7 @@ class DetalheActivity : AppCompatActivity() {
                 finish()
             }
         }
-    }
+    }//
 
         private fun atualizarTamanhosEAdicionais(
             produto: Produto,

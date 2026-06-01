@@ -16,6 +16,9 @@ import kotlinx.coroutines.launch
 import com.example.cheirocafe.AppDatabase
 import com.example.cheirocafe.PedidoDao
 import android.view.View
+import android.widget.Toast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MainActivityPedido : AppCompatActivity() {
 
@@ -80,12 +83,35 @@ class MainActivityPedido : AppCompatActivity() {
         txtQuantidadeItens = findViewById(R.id.txtTotalItensPainel)
         txtValorTotal = findViewById(R.id.txtPrecoTotalPainel)
 
-        //evento de click na sacola, no pop-up inferior
+        // evento de click na sacola, no pop-up inferior
         val btnVerSacola = findViewById<View>(R.id.btnVerSacola)
 
         btnVerSacola.setOnClickListener {
-            val intent = Intent(this, CarrinhoActivity::class.java)
-            startActivity(intent)
+            lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    // Busca a lista do banco em segundo plano
+                    val todosOsItens = pedidoDao.obterTodosOsItens()
+
+                    // Encontra o primeiro rascunho
+                    val ultimoRascunho = todosOsItens.firstOrNull { it.statusPedido == "RASCUNHO" }
+
+                    withContext(Dispatchers.Main) {
+                        val intent = Intent(this@MainActivityPedido, CarrinhoActivity::class.java)
+                        if (ultimoRascunho != null) {
+                            intent.putExtra("NUMERO_MESA", ultimoRascunho.numeroMesa)
+                        } else {
+                            intent.putExtra("NUMERO_MESA", 1) // Segurança
+                        }
+                        startActivity(intent)
+                    }
+                } catch (e: Exception) {
+                    // Se der QUALQUEER erro no banco, o app NÃO vai fechar. Ele vai te avisar na tela!
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivityPedido, "Erro no Banco: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                        Log.e("ERRO_CARRINHO", "Causa do Crash: ", e)
+                    }
+                }
+            }
         }
 
         // Ativa o monitoramento em tempo real do banco
@@ -95,9 +121,6 @@ class MainActivityPedido : AppCompatActivity() {
     //função de monitoramento
     private fun configurarObservadorCarrinho() {
         // Como estamos na MainActivity, precisamos passar um ID de mesa para a Query.
-        // Se você ainda não tem a mesa salva na MainActivity, vou colocar uma fixa (ex: 1)
-        // apenas para testar, mas depois você pode pegar a mesa dinâmica.
-        val mesaIdAtual = 1
 
         // Iniciamos uma Coroutine no escopo de ciclo de vida da Activity
         lifecycleScope.launch {
@@ -122,8 +145,6 @@ class MainActivityPedido : AppCompatActivity() {
             }
         }
     }
-
-
     private fun buscarDadosDoServidor() {
         lifecycleScope.launch {
             try {
@@ -134,7 +155,6 @@ class MainActivityPedido : AppCompatActivity() {
             }
         }
     }
-
     private fun mostrarMenuDeSubcategorias() {
         val subcategoriasMenu = listOf(
             SubcategoriaItem("Cafés Tradicionais", "TRADICIONAL", R.drawable.cafeprensa),
@@ -158,14 +178,12 @@ class MainActivityPedido : AppCompatActivity() {
 
         recyclerView.adapter = adapter
     }
-
     private fun abrirDetalhes(produto: Produto) {
         val intent = Intent(this, DetalheActivity::class.java)
         intent.putExtra("PRODUTO_SELECIONADO", produto)
         startActivity(intent)
     }
 }
-
 data class SubcategoriaItem(
     val nome: String,
     val codigo: String,
